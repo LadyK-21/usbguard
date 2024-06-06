@@ -14,11 +14,8 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM gcc:9.2
-SHELL ["/bin/bash", "-c"]
-RUN head -n1 /etc/os-release \
-        && \
-    apt-get update \
+FROM ubuntu:22.04
+RUN apt-get update \
         && \
     DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes -V \
             asciidoc \
@@ -26,6 +23,7 @@ RUN head -n1 /etc/os-release \
             automake \
             bash-completion \
             build-essential \
+            catch2 \
             docbook-xml \
             docbook-xsl \
             git \
@@ -48,22 +46,16 @@ RUN head -n1 /etc/os-release \
             systemd \
             tao-pegtl-dev \
             xsltproc
-RUN set -x \
-        && \
-    [[ "$(gcc -dumpversion) == 9.2.* ]] \
-        && \
-    [[ "$(g++ -dumpversion) == 9.2.* ]]
 ADD usbguard.tar usbguard/
-ADD catch.tar usbguard/src/ThirdParty/Catch/
 WORKDIR usbguard
 RUN git init &>/dev/null && ./autogen.sh
-RUN ./configure --enable-systemd --with-bundled-catch || ! cat config.log
+RUN ./configure --enable-systemd || ! cat config.log
 RUN make dist
 RUN tar xf usbguard-*.tar.gz
 RUN mv -v usbguard-*.*.*/ usbguard-release/
 RUN mkdir usbguard-release/build/
 WORKDIR usbguard-release/build/
-RUN ../configure --enable-systemd --with-bundled-catch || ! cat config.log
+RUN ../configure --enable-systemd || ! cat config.log
 RUN bash -c 'set -o pipefail; make V=1 "-j$(nproc)" |& tee build.log'
 RUN ! grep -F 'include file not found' build.log
 RUN make V=1 check || { cat src/Tests/test-suite.log ; false ; }

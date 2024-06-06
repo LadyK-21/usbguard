@@ -39,6 +39,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/poll.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <signal.h>
 #include <string.h>
@@ -577,7 +578,7 @@ namespace usbguard
         break;
 
       case SIGSYS:
-        USBGUARD_LOG(Error) << "Received SIGSYS: Seccomp whitelist violation!";
+        USBGUARD_LOG(Error) << "Received SIGSYS: Seccomp allowlist violation!";
         exit_loop = false;
         break;
 
@@ -622,6 +623,7 @@ namespace usbguard
         const int signum = sigtimedwait(&mask, &info, &timeout);
 
         if (signum == SIGUSR1 && info.si_signo == SIGUSR1 && info.si_pid == pid) {
+          waitpid(pid, nullptr, 0);
           USBGUARD_LOG(Trace) << "Finished daemonization";
           exit(EXIT_SUCCESS);
         }
@@ -756,7 +758,7 @@ namespace usbguard
     /* TODO: reevaluate the firewall rules for all active devices */
     const uint32_t id = _policy.appendRule(rule, parent_id);
 
-    if (_config.hasSettingValue("RuleFile") && permanent) {
+    if ((_config.hasSettingValue("RuleFile") || _config.hasSettingValue("RuleFolder")) && permanent) {
       _policy.save();
     }
 
@@ -769,7 +771,7 @@ namespace usbguard
     USBGUARD_LOG(Trace) << "id=" << id;
     _policy.removeRule(id);
 
-    if (_config.hasSettingValue("RuleFile")) {
+    if (_config.hasSettingValue("RuleFile") || _config.hasSettingValue("RuleFolder")) {
       _policy.save();
     }
   }

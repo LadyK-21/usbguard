@@ -71,7 +71,10 @@ man_ROFF_FILES=\
 	$(man_ADOC_FILES:.adoc=.roff)
 
 EXTRA_DIST+=\
-	$(man_ADOC_FILES)
+	$(man_ADOC_FILES) \
+	doc/man/example-allow-device.adoc \
+	doc/man/example-initial-policy.adoc \
+	doc/man/footer.adoc
 
 CLEANFILES+=\
 	$(man_ROFF_FILES) \
@@ -430,7 +433,9 @@ usbguard_SOURCES=\
 	src/CLI/usbguard-add-user.cpp \
 	src/CLI/usbguard-add-user.hpp \
 	src/CLI/usbguard-remove-user.cpp \
-	src/CLI/usbguard-remove-user.hpp
+	src/CLI/usbguard-remove-user.hpp \
+	src/CLI/usbguard-print-version.cpp \
+	src/CLI/usbguard-print-version.hpp
 
 usbguard_CXXFLAGS=\
 	$(PTHREAD_CFLAGS)

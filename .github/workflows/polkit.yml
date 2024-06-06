@@ -19,15 +19,21 @@ name: Check for Polkit policy parse errors
 on:
   push:
   pull_request:
+  schedule:
+    - cron: '0 4 * * 5'  # Every Friday at 4am
+
+# Drop permissions to minimum for security
+permissions:
+  contents: read
 
 jobs:
   polkit_policies:
 
     name: Check for Polkit policy parse errors
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11  # v4.1.1
 
     - name: Install runtime dependencies
       run:  |

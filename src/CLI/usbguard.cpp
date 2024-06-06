@@ -52,6 +52,7 @@
 #include "usbguard-read-descriptor.hpp"
 #include "usbguard-add-user.hpp"
 #include "usbguard-remove-user.hpp"
+#include "usbguard-print-version.hpp"
 
 namespace usbguard
 {
@@ -71,7 +72,8 @@ namespace usbguard
     { "watch", &usbguard_watch },
     { "read-descriptor", &usbguard_read_descriptor },
     { "add-user", &usbguard_add_user },
-    { "remove-user", &usbguard_remove_user }
+    { "remove-user", &usbguard_remove_user },
+    { "--version", &usbguard_print_version }
   };
 
   static void showTopLevelHelp(std::ostream& stream = std::cout)
@@ -98,7 +100,7 @@ namespace usbguard
     stream << "  read-descriptor                Read a USB descriptor from a file and print it in human-readable form." <<
       std::endl;
     stream << std::endl;
-    stream << "  add-user <name>                Add USBGuard IPC user/group (requires root privilges)" << std::endl;
+    stream << "  add-user <name>                Add USBGuard IPC user/group (requires root privileges)" << std::endl;
     stream << "  remove-user <name>             Remove USBGuard IPC user/group (requires root privileges)" << std::endl;
     stream << std::endl;
   }

@@ -1,5 +1,27 @@
 # Change Log
 
+## 1.1.3 - 2024-06-06
+
+### Fixed
+- Addressed several cases where either RuleFile or RuleFolder was not set.
+- Resolved a race condition during fork where the parent process did not wait until everything was initialized in the child process.
+- Included missing documentation in the tarball.
+- Fixed compatibility issues with GCC 13+.
+
+### Added
+- Implemented detection of integer overflow for device IDs to ensure that each device can be uniquely identified by a single ID.
+- Enhanced the service file to disable the Linux kernel's Out-Of-Memory (OOM) killing of processes for this unit.
+- D-bus: check if the client requested interactive authentication, as some clients do not prompt for passwords.
+- Made minor adjustments to the documentation.
+- RuleFolder is enabled by default. At startup, the path to folder must exist and be accessible by the daemon.
+
+## 1.1.2 - 2022-09-02
+
+### Fixed
+- Polkit: Always allow getParameter/listDevices/listRules in active sessions
+- D-Bus: Send reply on auth failure
+- Polkit: Unreference PolkitAuthorizationResult and PolkitAuthority structs if needed
+
 ## 1.1.1 - 2022-03-15
 
 ### Fixed
@@ -399,7 +421,7 @@
 ## 0.4 - 2016-02-07
 ### Changed
 - The daemon is now capable of dropping process capabilities and uses a seccomp
-  based syscall whitelist. Options to enable these features were added to the
+  based syscall allowlist. Options to enable these features were added to the
   usbguard-daemon command.
 - Devices connected at the start of the daemon are now recognized and the
   DevicePresent signal is sent for each of them.

@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2016 Red Hat, Inc.
+// Copyright (C) 2022 Red Hat, Inc.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,29 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
-// Authors: Daniel Kopecek <dkopecek@redhat.com>
+// Authors: Attila Lakatos <alakatos@redhat.com>
 //
 #pragma once
-
 #ifdef HAVE_BUILD_CONFIG_H
   #include <build-config.h>
 #endif
 
-#include <string>
-#include <cstdint>
-#include <cstddef>
-
 namespace usbguard
 {
-  size_t base64EncodedSize(size_t decoded_size);
-  size_t base64DecodedSize(size_t encoded_size);
-
-  std::string base64Encode(const std::string& value);
-  std::string base64Encode(const uint8_t* buffer, size_t buflen);
-
-  std::string base64Decode(const std::string& value);
-  size_t base64Decode(const std::string& value, void* buffer, size_t buflen);
-  std::string base64Decode(const char* const data, const size_t size);
+  int usbguard_print_version(int argc, char** argv);
 } /* namespace usbguard */
 
 /* vim: set ts=2 sw=2 et */
