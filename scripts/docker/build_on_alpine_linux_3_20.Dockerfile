@@ -14,41 +14,41 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM ubuntu:21.10
-RUN apt-get update \
+FROM alpine:3.20
+RUN echo '@edge-testing https://dl-cdn.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
         && \
-    DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends --yes -V \
+    apk add --update \
             asciidoc \
             autoconf \
             automake \
-            bash-completion \
-            build-essential \
-            catch2 \
-            docbook-xml \
-            docbook-xsl \
+            bash \
+            dbus-glib-dev \
+            file \
+            g++ \
+            gcc \
             git \
-            ldap-utils \
-            libaudit-dev \
-            libcap-ng-dev \
-            libdbus-glib-1-dev \
-            libldap-dev \
-            libpolkit-gobject-1-dev \
-            libprotobuf-dev \
-            libqb-dev \
-            libseccomp-dev \
+            libgcrypt-dev \
+            libqb-dev@edge-testing \
             libsodium-dev \
             libtool \
-            libxml2-utils \
-            libumockdev-dev \
-            pkg-config \
-            protobuf-compiler \
-            sudo \
-            systemd \
-            tao-pegtl-dev \
-            xsltproc
+            make \
+            musl-dev \
+            pegtl@edge-testing \
+            pkgconf \
+            polkit-dev \
+            protobuf-dev \
+            tar
 ADD usbguard.tar usbguard/
+ADD catch.tar usbguard/src/ThirdParty/Catch/
 WORKDIR usbguard
 RUN git init &>/dev/null && ./autogen.sh
-RUN ./configure --enable-systemd || ! cat config.log
-RUN make V=1 "-j$(nproc)"
-RUN make V=1 check || { cat src/Tests/test-suite.log ; false ; }
+RUN ./configure --with-bundled-catch || ! cat config.log
+RUN make dist
+RUN tar --version
+RUN tar xf usbguard-*.tar.gz
+RUN mv -v usbguard-*.*.*/ usbguard-release/
+RUN mkdir usbguard-release/build/
+WORKDIR usbguard-release/build/
+RUN ../configure --with-bundled-catch || ! cat config.log
+RUN bash -c 'set -o pipefail; make V=1 "-j$(nproc)" |& tee build.log'
+RUN ! grep -F 'include file not found' build.log

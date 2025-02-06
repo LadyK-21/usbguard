@@ -1,5 +1,5 @@
 ##
-## Copyright (c) 2022 Sebastian Pipping <sebastian@pipping.org>
+## Copyright (c) 2023 Sebastian Pipping <sebastian@pipping.org>
 ##
 ## This program is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -14,23 +14,14 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM centos:8.2.2004
-RUN sed \
-            -e '/^baseurl=.*/d' \
-            -e 's,^mirrorlist=.*repo=\([^&]\+\).*,baseurl=http://linuxsoft.cern.ch/centos-vault/8.2.2004/\1/x86_64/os/,' \
-            -i /etc/yum.repos.d/CentOS-* \
-        && \
-    dnf clean metadata \
-        && \
-    dnf install -y epel-release dnf-plugins-core \
-        && \
-    dnf config-manager --set-enabled PowerTools \
+FROM opensuse/tumbleweed:latest
+RUN zypper --non-interactive install dnf rpm-repos-openSUSE-Tumbleweed \
         && \
     dnf install -y \
             asciidoc \
             autoconf \
             automake \
-            dbus-glib-devel \
+            dbus-1-glib-devel \
             diffutils \
             file \
             gcc-c++ \
@@ -42,7 +33,6 @@ RUN sed \
             libxslt \
             make \
             polkit-devel \
-            protobuf-compiler \
             protobuf-devel
 ADD usbguard.tar usbguard/
 ADD catch.tar usbguard/src/ThirdParty/Catch/
