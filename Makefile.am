@@ -119,6 +119,7 @@ install-daemon-conf: $(top_builddir)/usbguard-daemon.conf
 	$(MKDIR_P) $(DESTDIR)/$(usbguard_confdir)
 	$(MKDIR_P) $(DESTDIR)/$(usbguard_confdir)/IPCAccessControl.d
 	$(MKDIR_P) $(DESTDIR)/${localstatedir}/log/usbguard
+	chmod 0700 $(DESTDIR)/${localstatedir}/log/usbguard
 	$(INSTALL) -m 600 $(top_builddir)/usbguard-daemon.conf \
 	  $(DESTDIR)/$(usbguard_confdir)/usbguard-daemon.conf
 	if ! test -f "$(DESTDIR)/$(usbguard_confdir)/rules.conf"; then \
