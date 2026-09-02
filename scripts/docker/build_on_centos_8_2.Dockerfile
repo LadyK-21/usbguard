@@ -14,7 +14,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FROM centos:8.2.2004
+FROM centos:centos8.4.2105
 RUN sed \
             -e '/^baseurl=.*/d' \
             -e 's,^mirrorlist=.*repo=\([^&]\+\).*,baseurl=http://linuxsoft.cern.ch/centos-vault/8.2.2004/\1/x86_64/os/,' \
